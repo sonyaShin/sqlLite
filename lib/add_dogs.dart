@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:extra_credit/helper.dart';
 
-import 'contacts.dart';
+import 'dogs.dart';
 
-class AddContacts extends StatefulWidget {
-  AddContacts({Key? key, this.contact}) : super(key: key);
+class AddDogs extends StatefulWidget {
+  AddDogs({Key? key, this.dog}) : super(key: key);
   //here i add a variable
   //it is not a required, but use this when update
-  final Contact? contact;
+  final Dog? dog;
 
   @override
-  State<AddContacts> createState() => _AddContactsState();
+  State<AddDogs> createState() => _AddDogsState();
 }
 
-class _AddContactsState extends State<AddContacts> {
+class _AddDogsState extends State<AddDogs> {
   //for TextField
   final _nameController = TextEditingController();
-  final _contactController = TextEditingController();
+  final _breedController = TextEditingController();
 
   @override
   void initState() {
     //when contact has data, mean is to update
     //instead of create new contact
-    if (widget.contact != null) {
-      _nameController.text = widget.contact!.name;
-      _contactController.text = widget.contact!.contact;
+    if (widget.dog != null) {
+      _nameController.text = widget.dog!.name;
+      _breedController.text = widget.dog!.breed;
     }
     super.initState();
   }
@@ -32,7 +32,7 @@ class _AddContactsState extends State<AddContacts> {
   @override
   void dispose() {
     _nameController.dispose();
-    _contactController.dispose();
+    _breedController.dispose();
     super.dispose();
   }
 
@@ -40,8 +40,8 @@ class _AddContactsState extends State<AddContacts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Contacts'),
-        backgroundColor: Color.fromARGB(255, 34, 29, 29),
+        title: Text('Add Dogs to List'),
+        backgroundColor: Color.fromARGB(255, 255, 138, 66),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(false),
@@ -59,34 +59,38 @@ class _AddContactsState extends State<AddContacts> {
               SizedBox(
                 height: 30,
               ),
-              _buildTextField(_contactController, 'Contact'),
+              _buildTextField(_breedController, 'Breed'),
               SizedBox(
                 height: 20,
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 212, 105, 73), // background
+                  onPrimary: Colors.white, // foreground
+                ),
                 //this button is pressed to add contact
                 onPressed: () async {
                   //if contact has data, then update existing list
                   //according to id
                   //else create a new contact
-                  if (widget.contact != null) {
-                    await DBHelper.updateContacts(Contact(
-                      id: widget.contact!.id, //have to add id here
+                  if (widget.dog != null) {
+                    await DBHelper.updateDogLists(Dog(
+                      id: widget.dog!.id, //have to add id here
                       name: _nameController.text,
-                      contact: _contactController.text,
+                      breed: _breedController.text,
                     ));
 
                     Navigator.of(context).pop(true);
                   } else {
-                    await DBHelper.createContacts(Contact(
+                    await DBHelper.createDogLists(Dog(
                       name: _nameController.text,
-                      contact: _contactController.text,
+                      breed: _breedController.text,
                     ));
 
                     Navigator.of(context).pop(true);
                   }
                 },
-                child: Text('Add to Contact List'),
+                child: Text('Add to Dog List'),
               ),
             ],
           ),
